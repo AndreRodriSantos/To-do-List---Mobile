@@ -126,6 +126,8 @@ public class CadTarefaFragment extends Fragment {
         protected void onPostExecute(String s) {
             if(s.equals("ok")){
                 Log.w("Resultado", "É tetra!!!");
+                //aciona o botao de voltar
+                getActivity().onBackPressed();
             }else{
                 Log.w("Resultado", "Não foi dessa vez");
             }

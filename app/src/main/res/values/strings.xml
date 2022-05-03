@@ -4,6 +4,8 @@
     <string name="titulo">Título:</string>
     <string name="descricao">Descrição:</string>
     <string name="salvar">Salvar</string>
+    <string name="concluida">Concluída</string>
+    <string name="aberta">Aberta</string>
     <string name="data">Data:</string>
     <string name="escolher_data">Escolha a Data</string>
 </resources>
