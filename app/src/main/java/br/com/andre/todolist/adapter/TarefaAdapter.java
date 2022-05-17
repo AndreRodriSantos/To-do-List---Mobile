@@ -1,39 +1,47 @@
 package br.com.andre.todolist.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
 import br.com.andre.todolist.R;
+import br.com.andre.todolist.fragment.PrincipalFragment;
 import br.com.andre.todolist.model.Tarefa;
 
 public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaViewHolder> {
     //Lista de tarefas
     private List<Tarefa> tarefas;
-    //varaivel para o Context
+    //variavel para o Context
     private Context context;
+    //variavel do tipo OnTarefaClickListener
+    private OnTarefaClickListener listenerClickTarefa;
 
     //construtor pra receber os valores da lista
-    public TarefaAdapter(List<Tarefa> lista, Context contexto){
+    public TarefaAdapter(List<Tarefa> lista, Context contexto, OnTarefaClickListener listener) {
         this.tarefas = lista;
         this.context = contexto;
+        this.listenerClickTarefa = listener;
     }
 
     @NonNull
     @Override
     public TarefaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //infla o layout do adapter
-        View view = LayoutInflater.from(context).inflate(R.layout.adapter_tarefa,parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.adapter_tarefa, parent, false);
         //retorna um novo view Holder com a view
         return new TarefaViewHolder(view);
     }
@@ -43,10 +51,10 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         //obtem a tarefa pela position
         Tarefa t = tarefas.get(position);
         holder.titulo_item.setText(t.getTitulo());
-        if (t.isFinalizada()){
+        if (t.isFinalizada()) {
             holder.status_item.setText(R.string.concluida);
             holder.status_item.setBackgroundColor(context.getResources().getColor(R.color.green));
-        }else{
+        } else {
             holder.status_item.setText(R.string.aberta);
             holder.status_item.setBackgroundColor(context.getResources().getColor(R.color.light_orange));
         }
@@ -54,17 +62,21 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyy");
         holder.data_item.setText(formatador.format(t.getDataPrevista()));
 
-        Calendar.getInstance().getTimeInMillis();
+        holder.itemView.setOnClickListener(v -> {
+            listenerClickTarefa.onClick(v, t);
+        });
+
+        /*Calendar.getInstance().getTimeInMillis();*/
 
     }
 
     @Override
     //retorna a quantidade de elementos a serem exibidos
     public int getItemCount() {
-        if(tarefas != null){
+        if (tarefas != null) {
             return tarefas.size();
         }
-        return  0;
+        return 0;
     }
 
     //Classe ViewHolder pra mapear aos components do xml
@@ -81,4 +93,11 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
             status_item = view.findViewById(R.id.status_item);
         }
     }
+
+    //interface para o clique na tarefa
+    public interface OnTarefaClickListener {
+        void onClick(View view, Tarefa tarefa);
+    }
+
+
 }
